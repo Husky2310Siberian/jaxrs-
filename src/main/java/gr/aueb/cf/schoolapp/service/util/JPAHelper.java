@@ -1,0 +1,54 @@
+package gr.aueb.cf.schoolapp.service.util;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
+public class JPAHelper {
+
+    private static EntityManagerFactory emf;
+    //ThreadLocal implements threadsafe, for each thread , one new Entity Manager generates
+    private static ThreadLocal<EntityManager> threadLocal = new ThreadLocal<>();
+
+
+    private JPAHelper() {
+    }
+
+    public static EntityManagerFactory getEntityManagerFactory() {
+        if(emf == null || !emf.isOpen()) {
+            emf = Persistence.createEntityManagerFactory("schoolPU");
+        }
+        return emf;
+    }
+
+    public static EntityManager getEntityManager () {
+        EntityManager em = threadLocal.get();
+        if(em == null || !em.isOpen()) {
+            em = getEntityManagerFactory().createEntityManager();
+            threadLocal.set(em);
+        }
+        return em;
+    }
+
+    public static void closeEntityManager() {
+        getEntityManager().close();
+    }
+
+    public static void beginTransaction() {
+        getEntityManager().getTransaction().begin();
+    }
+
+    public static void commitTransaction() {
+        getEntityManager().getTransaction().commit();
+    }
+
+    public static void rollbackTansaction() {
+        getEntityManager().getTransaction().rollback();
+    }
+
+    public static void closeEMF() {
+        emf.close();
+    }
+
+
+}
