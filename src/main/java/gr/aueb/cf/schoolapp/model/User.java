@@ -23,11 +23,9 @@ public class User extends AbstractEntity implements IdentifiableEntity , Princip
     private String username;
     private String password;
 
-
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
-
 
     @Override
     public String getName() {

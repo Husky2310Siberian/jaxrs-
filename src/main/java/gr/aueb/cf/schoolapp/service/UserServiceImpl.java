@@ -69,11 +69,11 @@ public class UserServiceImpl implements IUserService{
     @Override
     public boolean isUserValid(String username, String password) {
         try{
+            JPAHelper.commitTransaction();
             boolean isValid = userDAO.isUserValid(username , password);
             JPAHelper.commitTransaction();
             return isValid;
         } finally {
-            JPAHelper.closeEntityManager();
             JPAHelper.closeEntityManager();
         }
     }
@@ -83,8 +83,8 @@ public class UserServiceImpl implements IUserService{
         try{
             JPAHelper.beginTransaction();
             boolean mailExists = userDAO.isEmailExists(username);
-
             JPAHelper.commitTransaction();
+            return mailExists;
         } finally {
             JPAHelper.closeEntityManager();
         }
