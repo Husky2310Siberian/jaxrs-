@@ -41,7 +41,7 @@ public class UserDAOImpl extends AbstractDAO<User> implements IUserDAO {
 
     @Override
     public boolean isEmailExists(String username) {
-        String sql = "SELECT COUNT(u) FROM USER u WHERE u.username = :username";
+        String sql = "SELECT COUNT(u) FROM User u WHERE u.username = :username";
 
         try {
             Long count = getEntityManager()
