@@ -68,11 +68,25 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public boolean isUserValid(String username, String password) {
-        return false;
+        try{
+            boolean isValid = userDAO.isUserValid(username , password);
+            JPAHelper.commitTransaction();
+            return isValid;
+        } finally {
+            JPAHelper.closeEntityManager();
+            JPAHelper.closeEntityManager();
+        }
     }
 
     @Override
     public boolean isEmailExists(String username) {
-        return false;
+        try{
+            JPAHelper.beginTransaction();
+            boolean mailExists = userDAO.isEmailExists(username);
+
+            JPAHelper.commitTransaction();
+        } finally {
+            JPAHelper.closeEntityManager();
+        }
     }
 }
