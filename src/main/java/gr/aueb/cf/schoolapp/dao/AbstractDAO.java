@@ -18,6 +18,7 @@ public abstract class AbstractDAO<T extends IdentifiableEntity> implements IGene
     private Class<T> persistenceClass;
 
     public AbstractDAO() {
+
     }
 
     public Class<T> getPersistenceClass() {
@@ -61,40 +62,39 @@ public abstract class AbstractDAO<T extends IdentifiableEntity> implements IGene
     }
 
     @Override
-    public List<? extends T> getByCriteria(Map<String, Object> criteria) {
+    public List<T> getByCriteria(Map<String, Object> criteria) {
         return getByCriteria(getPersistenceClass(), criteria);
-
     }
 
     @Override
-    public List <T> getByCriteria(Class<T> clazz, Map<String, Object> criteria) {
+    public List<T> getByCriteria(Class<T> clazz, Map<String, Object> criteria) {
         EntityManager em = getEntityManager();
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<T> selectQuery = builder.createQuery(clazz);
         Root<T> entityRoot = selectQuery.from(clazz);
 
-        List<Predicate> predicates = getPredicatesList(builder , entityRoot , criteria);
+        List<Predicate> predicates = getPredicatesList(builder, entityRoot, criteria);
         selectQuery.select(entityRoot).where(predicates.toArray(new Predicate[0]));
         TypedQuery<T> query = em.createQuery(selectQuery);
-        addParametersToQuery(query , criteria);
+        addParametersToQuery(query, criteria);
         List<T> entitiesToReturn = query.getResultList();
-        if(entitiesToReturn != null )
-            System.out.println("IN getByCriteriaDAO" + Arrays.toString(entitiesToReturn.toArray()));
-        return entitiesToReturn;
+        if (entitiesToReturn != null) System.out.println("IN getByCriteriaDAO" + Arrays.toString(entitiesToReturn.toArray()));
+        else System.out.println("IS NULL");
+        return  entitiesToReturn;
     }
 
-    protected List<Predicate> getPredicatesList(CriteriaBuilder builder , Root<T> entityRoot , Map<String , Object> criteria) {
+    protected List<Predicate> getPredicatesList(CriteriaBuilder builder, Root<T> entityRoot, Map<String , Object> criteria) {
         List<Predicate> predicates = new ArrayList<>();
 
-        for(Map.Entry<String, Object> entry : criteria.entrySet()){
+        for (Map.Entry<String, Object> entry : criteria.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-
             ParameterExpression<?> val = builder.parameter(value.getClass(), buildParameterAlias(key));
             Predicate predicateLike = builder.like((Expression<String>) resolvePath(entityRoot, key), (Expression<String>) val);
             predicates.add(predicateLike);
         }
         return predicates;
+
     }
 
     protected Path<?> resolvePath(Root<T> root, String expression) {
@@ -106,10 +106,10 @@ public abstract class AbstractDAO<T extends IdentifiableEntity> implements IGene
         return path;
     }
 
-    protected void addParametersToQuery(TypedQuery<?> query , Map<String , Object> criteria) {
-        for(Map.Entry<String , Object> entry : criteria.entrySet()){
+    protected void addParametersToQuery(TypedQuery<?> query, Map<String , Object> criteria) {
+        for (Map.Entry<String , Object> entry : criteria.entrySet()) {
             Object value = entry.getValue();
-            query.setParameter(buildParameterAlias(entry.getKey()), value);
+            query.setParameter(buildParameterAlias(entry.getKey()), value + "%");
         }
     }
 

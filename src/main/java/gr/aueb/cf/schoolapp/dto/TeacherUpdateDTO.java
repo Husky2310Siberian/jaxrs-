@@ -18,7 +18,7 @@ public class TeacherUpdateDTO {
     private String firstname;
 
     @NotNull (message = "Το επώνυμο δεν μπορεί να μην υπάρχει.")
-    @Size(min = 2, max = 255, message = "Name must contains 2 to 255 characters")
+    @Size(min = 2, max = 255, message = "Surname must contains 2 to 255 characters")
     private String lastname;
 
     @NotNull(message = "Το ΑΦΜ δεν μπορεί να μην υπάρχει.")
