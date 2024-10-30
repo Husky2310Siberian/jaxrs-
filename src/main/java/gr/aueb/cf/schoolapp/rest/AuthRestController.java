@@ -1,5 +1,6 @@
 package gr.aueb.cf.schoolapp.rest;
 
+import gr.aueb.cf.schoolapp.authentication.AuthenticationProvider;
 import gr.aueb.cf.schoolapp.core.exceptions.AppServerException;
 import gr.aueb.cf.schoolapp.core.exceptions.EntityInvalidArgumentException;
 import gr.aueb.cf.schoolapp.dto.UserInsertDTO;
@@ -24,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 @ApplicationScoped
-@RequiredArgsConstructor(onConstructor_ = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 @Path("/path")
 public class AuthRestController {
 
     private final IUserService userService;
-    //todo AuthenticationProvider
+    private final AuthenticationProvider authenticationProvider;
     //todo JwtService
 
     @POST

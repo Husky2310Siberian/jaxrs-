@@ -28,10 +28,6 @@ public class UserServiceImpl implements IUserService{
             JPAHelper.beginTransaction();
             User user = Mapper.mapToUser(dto);
 
-//            if(userDAO.getByUsername(dto.getUsername()).isPresent()){
-//                throw new EntityAlreadyExistsException("User" , "User with username" + dto.getUsername() + "already exists");
-//            }
-
             UserReadOnlyDTO readOnlyDTO = userDAO.insert(user)
                     .map(Mapper::mapToUserReadOnlyDTO)
                     .orElseThrow(() -> new AppServerException("User", "User with vat:" + dto.getUsername() + "not inserted"));
